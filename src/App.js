@@ -18,6 +18,7 @@ class App extends Component {
     accepted.forEach(file => {
       const path = '/testdump/' + (+new Date()) + '-' + file.name;
       db.child(path).put(file).then(snapshot => {
+        //snapshot is some information reguarding the path to the new upload
         this.setState({
           uploads: [...this.state.uploads, { ...snapshot.task.location_, name: file.name }],
         });
@@ -29,6 +30,7 @@ class App extends Component {
     console.log(upload);
     const download = firebase.storage().ref(upload.path_);
     console.log(download);
+    //this next part was coppied from documentation
     download.getDownloadURL().then(url => {
       var xhr = new XMLHttpRequest();
       xhr.responseType = 'blob';
@@ -42,12 +44,6 @@ class App extends Component {
     });
   }
 
-  getDownloads = () => {
-    const db = firebase.storage();
-
-    return [];
-  }
-
 
   render() {
 
@@ -55,9 +51,6 @@ class App extends Component {
       <div className="App">
         <h1>dump your data</h1>
         <Dropzone onDrop={(files) => this.handleDrop(files)}></Dropzone>
-        <pre>
-          {this.getDownloads()}
-        </pre>
         <ul>
           {this.state.uploads.map(upload => (
             <li key={upload.name}>
