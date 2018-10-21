@@ -29,6 +29,7 @@ class App extends Component {
   handleClick = upload => {
     console.log(upload);
     const download = firebase.storage().ref(upload.path_);
+    //download is the reference to the storage database
     console.log(download);
     //this next part was coppied from documentation
     download.getDownloadURL().then(url => {
