@@ -8,6 +8,7 @@ class App extends Component {
 
   state = {
     uploads: [],
+    activeDownload: '',
   }
 
 
@@ -20,6 +21,7 @@ class App extends Component {
       db.child(path).put(file).then(snapshot => {
         //snapshot is some information reguarding the path to the new upload
         this.setState({
+          ...this.state,
           uploads: [...this.state.uploads, { ...snapshot.task.location_, name: file.name }],
         });
       })
@@ -33,13 +35,18 @@ class App extends Component {
     console.log(download);
     //this next part was coppied from documentation
     download.getDownloadURL().then(url => {
-      var xhr = new XMLHttpRequest();
+      let xhr = new XMLHttpRequest();
       xhr.responseType = 'blob';
       xhr.onload = event => {
-        var blob = xhr.response;
+        let blob = xhr.response;
+        console.log(blob);
       };
       xhr.open('GET', url);
       xhr.send();
+      this.setState({
+        ...this.state,
+        activeDownload: url,
+      });
     }).catch(function (error) {
       console.log('error in download:', error);
     });
@@ -60,6 +67,7 @@ class App extends Component {
             </li>
           ))}
         </ul>
+        <img src={this.activeDownload} alt=""/>
       </div>
     );
   }
